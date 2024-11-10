@@ -62,9 +62,16 @@ const HomeScreen = () => {
     return <ActivityIndicator style={{ margin: 16 }} color="#6b52ae" />;
   };
 
-  function toggleBookmark(item: PixabayModel): void {
-    throw new Error("Function not implemented.");
-  }
+  const toggleBookmark = async (item: PixabayModel) => {
+    const isCurrentlyBookmarked = bookmarkedItems.includes(item.id);
+    if (isCurrentlyBookmarked) {
+      await removeBookmark(item.id);
+      setBookmarkedItems((prev) => prev.filter((id) => id !== item.id));
+    } else {
+      await addBookmark(item);
+      setBookmarkedItems((prev) => [...prev, item.id]);
+    }
+  };
 
   return (
     <View style={styles.container}>
