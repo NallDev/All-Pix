@@ -14,12 +14,12 @@ const axiosBaseQuery: BaseQueryFn<
   unknown
 > = async ({ url, method, data, params }) => {
   try {
-    const apiKey = await getToken(); // Retrieve the API key from storage
+    const apiKey = await getToken();
     const result = await axiosInstance({
       url,
       method,
       data,
-      params: { ...params, key: apiKey }, // Include the API key in params
+      params: { ...params, key: apiKey },
     });
     return { data: result };
   } catch (axiosError) {
@@ -33,7 +33,6 @@ const axiosBaseQuery: BaseQueryFn<
   }
 };
 
-// RTK Query API slice
 export const pixabayApi = createApi({
   reducerPath: "pixabayApi",
   baseQuery: axiosBaseQuery,

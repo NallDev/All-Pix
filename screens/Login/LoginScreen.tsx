@@ -43,7 +43,6 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
     setLoading(true);
     setToastVisible(false);
 
-    // Shrink button animation
     Animated.timing(buttonScale, {
       toValue: 0.9,
       duration: 150,
@@ -74,7 +73,6 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   const showCustomToast = () => {
-    // Fade in the toast
     setToastVisible(true);
     Animated.timing(toastOpacity, {
       toValue: 1,
@@ -82,7 +80,6 @@ const LoginScreen: React.FC<Props> = ({ navigation }) => {
       useNativeDriver: true,
     }).start(() => {
       setTimeout(() => {
-        // Fade out the toast after 2 seconds
         Animated.timing(toastOpacity, {
           toValue: 0,
           duration: 500,

@@ -1,5 +1,6 @@
 import React from "react";
-import { View, Text, Image, StyleSheet, Button } from "react-native";
+import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 type CardProps = {
   imageURL: string;
@@ -18,13 +19,17 @@ const Card: React.FC<CardProps> = ({
 }) => (
   <View style={styles.card}>
     <Image source={{ uri: imageURL }} style={styles.image} />
-    <Text style={styles.user}>{user}</Text>
-    <Text style={styles.tags}>{tags}</Text>
-    <Button
-      title={bookmarked ? "Bookmarked" : "Bookmark"}
-      onPress={onToggleBookmark}
-      color={bookmarked ? "#ff6347" : "#aaa"}
-    />
+    <View style={styles.infoContainer}>
+      <Text style={styles.user}>{user}</Text>
+      <Text style={styles.tags}>{tags}</Text>
+    </View>
+    <TouchableOpacity onPress={onToggleBookmark} style={styles.bookmarkButton}>
+      <Icon
+        name={bookmarked ? "bookmark" : "bookmark-o"}
+        size={20}
+        color={bookmarked ? "#4a90e2" : "#ccc"}
+      />
+    </TouchableOpacity>
   </View>
 );
 
@@ -32,24 +37,45 @@ const styles = StyleSheet.create({
   card: {
     marginBottom: 16,
     backgroundColor: "#fff",
-    borderRadius: 8,
+    borderRadius: 12,
     overflow: "hidden",
-    elevation: 3,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
   },
   image: {
     width: "100%",
     height: 200,
     resizeMode: "cover",
   },
+  infoContainer: {
+    padding: 16,
+  },
   user: {
-    marginTop: 8,
-    paddingHorizontal: 16,
     fontWeight: "bold",
+    fontSize: 16,
+    color: "#333",
+    marginBottom: 4,
   },
   tags: {
-    paddingHorizontal: 16,
-    paddingBottom: 8,
-    color: "#666",
+    color: "#777",
+    fontSize: 14,
+  },
+  bookmarkButton: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    backgroundColor: "#fff",
+    borderRadius: 50,
+    width: 36,
+    height: 36,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
 });
 

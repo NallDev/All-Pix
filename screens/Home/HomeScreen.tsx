@@ -3,7 +3,7 @@ import {
   View,
   Text,
   TextInput,
-  Button,
+  TouchableOpacity,
   FlatList,
   ActivityIndicator,
   StyleSheet,
@@ -12,6 +12,7 @@ import { useFetchDataQuery } from "@/redux/slices/apiSlice";
 import Card from "@/components/Card";
 import { PixabayModel } from "@/models/PixabayModel";
 import { getBookmarks, addBookmark, removeBookmark } from "@/utils/storage";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 const HomeScreen = () => {
   const [query, setQuery] = useState("");
@@ -36,10 +37,10 @@ const HomeScreen = () => {
 
   useEffect(() => {
     if (data) {
-      setItemsSet((prevItemsSet) => {
+      setItemsSet((prevItemsSet: Set<PixabayModel>) => {
         const newItemsSet: Set<PixabayModel> =
           page === 1 ? new Set() : new Set(prevItemsSet);
-        data.hits.forEach((item: PixabayModel) => newItemsSet.add(item)); // Explicitly type 'item' as PixabayModel
+        data.hits.forEach((item: PixabayModel) => newItemsSet.add(item));
         return newItemsSet;
       });
     }
@@ -56,39 +57,36 @@ const HomeScreen = () => {
     }
   };
 
-  const toggleBookmark = async (item: PixabayModel) => {
-    const isCurrentlyBookmarked = bookmarkedItems.includes(item.id);
-    if (isCurrentlyBookmarked) {
-      await removeBookmark(item.id);
-      setBookmarkedItems((prev) => prev.filter((id) => id !== item.id));
-    } else {
-      await addBookmark(item);
-      setBookmarkedItems((prev) => [...prev, item.id]);
-    }
-  };
-
   const renderFooter = () => {
     if (!isFetching) return null;
-    return <ActivityIndicator style={{ margin: 16 }} />;
+    return <ActivityIndicator style={{ margin: 16 }} color="#6b52ae" />;
   };
+
+  function toggleBookmark(item: PixabayModel): void {
+    throw new Error("Function not implemented.");
+  }
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Search images"
-        value={query}
-        returnKeyType="search"
-        onChangeText={setQuery}
-        onSubmitEditing={handleSearch}
-      />
-      <Button title="Search" onPress={handleSearch} />
+      <View style={styles.searchContainer}>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search images"
+          placeholderTextColor="#999"
+          value={query}
+          onChangeText={setQuery}
+          onSubmitEditing={handleSearch}
+        />
+        <TouchableOpacity onPress={handleSearch} style={styles.searchButton}>
+          <Icon name="search" size={20} color="#fff" />
+        </TouchableOpacity>
+      </View>
       {error ? (
-        <Text>Error fetching data</Text>
+        <Text style={styles.errorText}>Error fetching data</Text>
       ) : (
         <>
           {data && data.hits.length === 0 && page === 1 ? (
-            <Text style={styles.emptyText}>Data is empty</Text>
+            <Text style={styles.emptyText}>No results found</Text>
           ) : (
             <FlatList
               style={styles.list}
@@ -119,13 +117,38 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
     paddingHorizontal: 16,
+    backgroundColor: "#f4f3f8",
+  },
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 16,
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
   },
   searchInput: {
-    marginBottom: 16,
-    padding: 8,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
+    flex: 1,
+    height: 45,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    color: "#333",
+  },
+  searchButton: {
+    height: 45,
+    width: 48,
+    backgroundColor: "#4a90e2",
+    borderTopRightRadius: 8,
+    borderBottomRightRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  errorText: {
+    textAlign: "center",
+    color: "#d9534f",
   },
   emptyText: {
     textAlign: "center",
